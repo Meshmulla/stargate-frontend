@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build && npm run build:widget",
-  "regions": ["iad1", "lhr1", "sin1"],
+  "regions": ["iad1"],
   "headers": [
     {
       "source": "/(.*)",

@@ -1,16 +1,21 @@
 'use client';
 
-import { Copy, ExternalLink, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { Copy, ExternalLink, Plus, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useInvoices } from '@/hooks/useInvoices';
+import { ShareModal } from '@/components/payment-links/ShareModal';
 
 export default function PaymentLinksPage() {
   const { data } = useInvoices('?limit=50');
   const links = data?.items ?? [];
+  const [sharing, setSharing] = useState<{ url: string; label: string } | null>(null);
   return (
+    <>
+    {sharing && <ShareModal url={sharing.url} label={sharing.label} onClose={() => setSharing(null)} />}
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
@@ -40,6 +45,9 @@ export default function PaymentLinksPage() {
               <Button className="bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => navigator.clipboard.writeText(invoice.payment_url)}>
                 <Copy size={16} /> Copy
               </Button>
+              <Button className="bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => setSharing({ url: invoice.payment_url, label: invoice.description || invoice.id })}>
+                <Share2 size={16} /> Share
+              </Button>
               <Link href={`/pay/${invoice.id}`} target="_blank">
                 <Button className="bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50">
                   <ExternalLink size={16} /> Open
@@ -59,5 +67,6 @@ export default function PaymentLinksPage() {
         </Card>
       )}
     </div>
+    </>
   );
 }

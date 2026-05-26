@@ -33,6 +33,11 @@ export const api = {
     register: (dto: RegisterDto) => request<AuthTokens>('/auth/register', { method: 'POST', body: JSON.stringify(dto) }),
     refresh: () => request<AuthTokens>('/auth/refresh', { method: 'POST' }),
     logout: () => request('/auth/logout', { method: 'POST' }),
+    initTOTP: () => request<{ secret: string; qr_code_url: string }>('/auth/totp/init', { method: 'POST' }),
+    verifyTOTP: (dto: { code: string }) => request<{ backup_codes: string[] }>('/auth/totp/verify', { method: 'POST', body: JSON.stringify(dto) }),
+    confirmTOTP: () => request('/auth/totp/confirm', { method: 'POST' }),
+    disableTOTP: (dto: { code: string }) => request('/auth/totp/disable', { method: 'POST', body: JSON.stringify(dto) }),
+    getTOTPStatus: () => request<{ enabled: boolean; last_verified?: string }>('/auth/totp/status', { method: 'GET' }),
   },
   merchants: {
     me: () => request('/merchants/me'),
@@ -57,5 +62,12 @@ export const api = {
     remove: (id: string) => request(`/webhooks/${id}`, { method: 'DELETE' }),
     deliveries: (id: string) => request(`/webhooks/${id}/deliveries`),
     retry: (id: string) => request(`/webhooks/deliveries/${id}/retry`, { method: 'POST' }),
+  },
+  analytics: {
+    revenueByPeriod: (period: 'daily' | 'weekly' | 'monthly', days?: number) =>
+      request<Array<{ date: string; amount: number }>>(`/analytics/revenue?period=${period}${days ? `&days=${days}` : ''}`),
+    topPaymentLinks: (limit?: number) => request<any[]>(`/analytics/top-links${limit ? `?limit=${limit}` : ''}`),
+    conversionFunnel: (period?: string) => request<any>(`/analytics/conversion-funnel${period ? `?period=${period}` : ''}`),
+    summaryStats: () => request<any>('/analytics/summary'),
   },
 };

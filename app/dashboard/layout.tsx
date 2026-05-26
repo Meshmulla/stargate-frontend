@@ -10,6 +10,7 @@ import { useSession } from '@/lib/session';
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+  { href: '/dashboard/revenue', label: 'Revenue', icon: BarChart3 },
   { href: '/dashboard/transactions', label: 'Transactions', icon: CreditCard },
   { href: '/dashboard/payment-links', label: 'Payment Links', icon: FileText },
   { href: '/dashboard/invoices', label: 'Invoices', icon: FileText },
@@ -32,7 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
         <nav className="space-y-1">
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="flex h-10 items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-slate-700 transition hover:border-violet hover:bg-violet/10 hover:text-ink">
+            <Link key={item.href} href={item.href as any} className="flex h-10 items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-slate-700 transition hover:border-violet hover:bg-violet/10 hover:text-ink">
               <item.icon size={18} /> {item.label}
             </Link>
           ))}

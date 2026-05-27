@@ -16,7 +16,19 @@ export function PaymentWidget({ invoiceId, onSuccess, onError, theme = 'light' }
   const { status } = useInvoiceStatus(invoiceId);
   const wallet = useWallet();
 
-  useEffect(() => { api.invoices.public(invoiceId).then(setInvoice).catch(onError); }, [invoiceId, onError]);
+  useEffect(() => {
+    api.invoices.public(invoiceId).then(setInvoice).catch((err) => {
+      onError?.(err);
+      window.parent?.postMessage({ type: 'STARGATE_ERROR', invoiceId, code: 'UNKNOWN', message: err.message }, '*');
+    });
+  }, [invoiceId, onError]);
+
+  useEffect(() => {
+    if (invoice) {
+      window.parent?.postMessage({ type: 'STARGATE_LOADED', invoiceId }, '*');
+    }
+  }, [invoice, invoiceId]);
+
   useEffect(() => {
     if (status === 'paid' && invoice) {
       onSuccess?.(invoice);
@@ -32,18 +44,23 @@ export function PaymentWidget({ invoiceId, onSuccess, onError, theme = 'light' }
       if (!publicKey) {
         if (wallet.error) {
           setPaymentError(wallet.error.message);
+          window.parent?.postMessage({ type: 'STARGATE_ERROR', invoiceId, code: 'WALLET_CONNECTION_FAILED', message: wallet.error.message }, '*');
         }
         return;
       }
 
       const result = await api.compliance.screen(publicKey);
       setBlocked(result.result === 'blocked');
+      if (result.result === 'blocked') {
+        window.parent?.postMessage({ type: 'STARGATE_ERROR', invoiceId, code: 'COMPLIANCE_BLOCKED', message: 'Wallet address was blocked by compliance screening' }, '*');
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setPaymentError(`Connection failed: ${message}`);
+      window.parent?.postMessage({ type: 'STARGATE_ERROR', invoiceId, code: 'WALLET_CONNECTION_FAILED', message }, '*');
       console.error('Wallet connection error:', err);
     }
-  }, [wallet]);
+  }, [wallet, invoiceId]);
 
   const pay = useCallback(async () => {
     try {
@@ -63,6 +80,7 @@ export function PaymentWidget({ invoiceId, onSuccess, onError, theme = 'light' }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setPaymentError(`Payment failed: ${message}`);
+      window.parent?.postMessage({ type: 'STARGATE_ERROR', invoiceId, code: 'TX_SUBMISSION_FAILED', message }, '*');
       console.error('Payment error:', err);
       setSubmitted(false);
     }

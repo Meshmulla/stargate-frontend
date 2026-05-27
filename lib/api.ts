@@ -70,4 +70,19 @@ export const api = {
     conversionFunnel: (period?: string) => request<any>(`/analytics/conversion-funnel${period ? `?period=${period}` : ''}`),
     summaryStats: () => request<any>('/analytics/summary'),
   },
+  disputes: {
+    list: (query = '') => request<any>(`/disputes${query}`),
+    get: (id: string) => request<any>(`/disputes/${id}`),
+    respond: (id: string, dto: any) => request<any>(`/disputes/${id}/respond`, { method: 'POST', body: JSON.stringify(dto) }),
+    uploadEvidence: (id: string, formData: FormData) => 
+      fetch(`${API_URL}/disputes/${id}/evidence`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: formData,
+      }).then(res => res.json()),
+    timeline: (id: string) => request<any[]>(`/disputes/${id}/timeline`),
+  },
 };

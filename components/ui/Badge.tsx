@@ -11,6 +11,8 @@ const styles: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-800',
   sandbox: 'bg-ocean/10 text-ocean',
   live: 'bg-emerald-100 text-emerald-800',
+  active: 'bg-emerald-100 text-emerald-800',
+  suspended: 'bg-red-100 text-red-800',
 };
 
 export function Badge({ status }: { status: string }) {

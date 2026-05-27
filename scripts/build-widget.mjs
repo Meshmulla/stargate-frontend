@@ -1,8 +1,15 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 mkdirSync('dist', { recursive: true });
-writeFileSync(
-  'dist/stargate-widget.js',
-  `window.StargateWidget={mount:function(el,opts){var origin=opts.origin||window.location.origin;el.innerHTML='<iframe src="'+origin+'/pay/'+encodeURIComponent(opts.invoiceId)+'" width="420" height="640" style="border:0"></iframe>';}};`
-);
-console.log('dist/stargate-widget.js');
+
+const src = readFileSync('widget/stargate-widget.js', 'utf8');
+// Minimal minification: strip comments and collapse whitespace
+const minified = src
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\/\/[^\n]*/g, '')
+  .replace(/\s{2,}/g, ' ')
+  .replace(/\n/g, '')
+  .trim();
+
+writeFileSync('dist/stargate-widget.js', minified);
+console.log('dist/stargate-widget.js written (' + minified.length + ' bytes)');

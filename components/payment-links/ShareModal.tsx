@@ -65,10 +65,10 @@ export function ShareModal({ url, label, onClose }: ShareModalProps) {
         <p className="mb-5 truncate text-xs text-slate-500">{label}</p>
 
         <div ref={canvasRef} className="flex justify-center">
-          <QRCodeCanvas value={url} size={180} marginSize={2} />
+          <QRCodeCanvas value={url} size={180} />
         </div>
         <div className="hidden">
-          <QRCodeSVG id="share-qr-svg" value={url} size={180} marginSize={2} />
+          <QRCodeSVG id="share-qr-svg" value={url} size={180} />
         </div>
 
         <div className="mt-5 flex flex-col gap-2">

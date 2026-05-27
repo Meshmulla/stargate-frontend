@@ -19,7 +19,7 @@ export function InvoiceDetail({ invoice, onCancel }: { invoice: any; onCancel():
         {invoice.status === 'pending' && <Button onClick={onCancel}>Cancel invoice</Button>}
       </section>
       <aside className="rounded-md border border-slate-200 bg-white p-4">
-        <QRCodeSVG value={invoice.payment_url} className="h-full w-full" />
+        <QRCodeSVG value={invoice.payment_url} size={240} className="mx-auto max-w-full" />
         <Button className="mt-4 w-full" onClick={() => navigator.clipboard.writeText(invoice.payment_url)}>Copy payment URL</Button>
       </aside>
     </div>

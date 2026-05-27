@@ -56,6 +56,14 @@ export const api = {
   compliance: {
     screen: (address: string) => request<{ result: 'clear' | 'blocked' | 'review' }>('/compliance/screen', { method: 'POST', body: JSON.stringify({ address }) }),
   },
+  team: {
+    list: (query = '') => request<any>(`/team${query}`),
+    invite: (dto: any) => request<any>('/team/invite', { method: 'POST', body: JSON.stringify(dto) }),
+    get: (id: string) => request<any>(`/team/${id}`),
+    update: (id: string, dto: any) => request<any>(`/team/${id}`, { method: 'PATCH', body: JSON.stringify(dto) }),
+    remove: (id: string) => request<any>(`/team/${id}`, { method: 'DELETE' }),
+    resendInvite: (id: string) => request<any>(`/team/${id}/resend`, { method: 'POST' }),
+  },
   webhooks: {
     list: () => request<any[]>('/webhooks'),
     create: (dto: unknown) => request('/webhooks', { method: 'POST', body: JSON.stringify(dto) }),

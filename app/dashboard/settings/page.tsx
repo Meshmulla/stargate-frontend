@@ -5,11 +5,13 @@ import { Input } from '@/components/ui/Input';
 import { TwoFactorManagement } from '@/components/auth/TwoFactorManagement';
 import { TOTPSetupGuide } from '@/components/auth/TOTPSetupGuide';
 import { CustomDomainConfig } from '@/components/settings/CustomDomainConfig';
+import { StellarAddressQR } from '@/components/settings/StellarAddressQR';
 import { api } from '@/lib/api';
 import { useState } from 'react';
 
 export default function SettingsPage() {
   const [showTOTPSetup, setShowTOTPSetup] = useState(false);
+  const [stellarAddress, setStellarAddress] = useState('');
 
   async function save(formData: FormData) {
     await api.merchants.update({
@@ -18,6 +20,7 @@ export default function SettingsPage() {
       settlement_cadence: formData.get('settlement_cadence'),
       checkout_domain: formData.get('checkout_domain'),
     });
+    setStellarAddress(formData.get('stellar_address') as string);
   }
 
   return (
@@ -39,6 +42,13 @@ export default function SettingsPage() {
             <Input name="checkout_domain" placeholder="example.com (optional custom checkout domain)" />
             <Button>Save settings</Button>
           </form>
+
+          {stellarAddress && (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-ink mb-3">Stellar Receiving Address QR</h3>
+              <StellarAddressQR address={stellarAddress} label="Scan to send USDC to this address" />
+            </div>
+          )}
         </div>
 
         <div>

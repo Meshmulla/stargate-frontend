@@ -68,6 +68,51 @@ export interface PublicInvoice {
   expires_at: string;
 }
 
+export type DisputeStatus = 'open' | 'under_review' | 'resolved' | 'closed' | 'won' | 'lost';
+export type DisputeReason = 'fraudulent' | 'duplicate' | 'product_not_received' | 'product_unacceptable' | 'other';
+
+export interface Dispute {
+  id: string;
+  invoice_id: string;
+  merchant_id: string;
+  amount_usdc: string;
+  reason: DisputeReason;
+  status: DisputeStatus;
+  customer_email?: string;
+  customer_message?: string;
+  merchant_response?: string;
+  evidence_files?: string[];
+  created_at: string;
+  updated_at: string;
+  resolved_at?: string;
+  resolution_notes?: string;
+}
+
+export interface DisputeListResponse {
+  page: number;
+  limit: number;
+  total: number;
+  items: Dispute[];
+}
+
+export interface DisputeTimelineEvent {
+  id: string;
+  dispute_id: string;
+  event_type: 'created' | 'evidence_submitted' | 'status_changed' | 'message_added' | 'resolved';
+  description: string;
+  metadata?: Record<string, any>;
+  created_at: string;
+  created_by?: string;
+}
+
+export interface CreateDisputeResponseDto {
+  message: string;
+  evidence_files?: File[];
+}
+
+export interface UploadEvidenceDto {
+  file: File;
+  description?: string;
 export type TeamMemberRole = 'owner' | 'admin' | 'developer' | 'viewer';
 export type TeamMemberStatus = 'active' | 'pending' | 'suspended';
 

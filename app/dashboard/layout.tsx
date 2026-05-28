@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { CommandPalette } from '@/components/dashboard/CommandPalette';
+import { NotificationCenter } from '@/components/dashboard/NotificationCenter';
 import { Input } from '@/components/ui/Input';
 import { useSession } from '@/lib/session';
 
@@ -58,9 +59,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Search className="pointer-events-none absolute left-3 top-2.5 text-slate-400" size={16} />
             <Input className="w-full pl-9" placeholder="Search invoices, payments, webhooks" />
           </div>
-          <Button className="h-9 bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => { session.logout(); router.push('/login'); }}>
-            <LogOut size={16} /> Logout
-          </Button>
+          <div className="flex items-center gap-4">
+            <NotificationCenter />
+            <Button className="h-9 bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => { session.logout(); router.push('/login'); }}>
+              <LogOut size={16} /> Logout
+            </Button>
+          </div>
         </header>
         <main className="p-6">{children}</main>
       </div>

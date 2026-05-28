@@ -78,6 +78,9 @@ export const api = {
     conversionFunnel: (period?: string) => request<any>(`/analytics/conversion-funnel${period ? `?period=${period}` : ''}`),
     summaryStats: () => request<any>('/analytics/summary'),
   },
+  developers: {
+    rateLimit: () => request<{ used: number; limit: number; reset_at: string }>('/developers/rate-limit'),
+  },
   disputes: {
     list: (query = '') => request<any>(`/disputes${query}`),
     get: (id: string) => request<any>(`/disputes/${id}`),

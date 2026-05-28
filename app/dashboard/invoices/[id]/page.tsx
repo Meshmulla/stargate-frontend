@@ -7,5 +7,11 @@ import { api } from '@/lib/api';
 export default function InvoicePage({ params }: { params: { id: string } }) {
   const { data, mutate } = useSWR(['invoice', params.id], () => api.invoices.get(params.id));
   if (!data) return null;
-  return <InvoiceDetail invoice={data} onCancel={async () => { await api.invoices.cancel(params.id); mutate(); }} />;
+  return (
+    <InvoiceDetail
+      invoice={data}
+      onCancel={async () => { await api.invoices.cancel(params.id); mutate(); }}
+      onRefund={async () => { mutate(); }}
+    />
+  );
 }

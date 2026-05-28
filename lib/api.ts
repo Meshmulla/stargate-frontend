@@ -48,6 +48,7 @@ export const api = {
     create: (dto: CreateInvoiceDto) => request<any>('/invoices', { method: 'POST', body: JSON.stringify(dto) }),
     get: (id: string) => request<any>(`/invoices/${id}`),
     cancel: (id: string) => request<any>(`/invoices/${id}/cancel`, { method: 'POST' }),
+    refund: (id: string) => request<any>(`/invoices/${id}/refund`, { method: 'POST' }),
     public: (id: string) => request<PublicInvoice>(`/invoices/public/${id}`),
   },
   payments: {

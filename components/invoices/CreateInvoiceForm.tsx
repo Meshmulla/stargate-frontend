@@ -29,6 +29,8 @@ export function CreateInvoiceForm() {
     router.push(`/dashboard/invoices/${invoice.id}`);
   }
 
+  const isSubmitting = form.formState.isSubmitting;
+
   return (
     <form className="max-w-xl space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
       <Input placeholder="Amount (USDC)" type="number" step="0.0000001" {...form.register('amount_usdc')} />
@@ -41,7 +43,9 @@ export function CreateInvoiceForm() {
         <option value={1440}>24h</option>
       </select>
       <div className="rounded-md bg-slate-100 p-3 text-sm text-slate-700">You receive: {preview.net} USDC. Buyer pays: {preview.gross} USDC.</div>
-      <Button type="submit">Create invoice</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Creating…' : 'Create invoice'}
+      </Button>
     </form>
   );
 }

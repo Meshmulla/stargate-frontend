@@ -113,6 +113,7 @@ export interface CreateDisputeResponseDto {
 export interface UploadEvidenceDto {
   file: File;
   description?: string;
+}
 export type TeamMemberRole = 'owner' | 'admin' | 'developer' | 'viewer';
 export type TeamMemberStatus = 'active' | 'pending' | 'suspended';
 

@@ -1,4 +1,5 @@
-'use client';
+import type { Metadata } from 'next';
+import { InvoicesPageClient } from './_client';
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -81,4 +82,11 @@ export default function InvoicesPage() {
       )}
     </div>
   );
+export const metadata: Metadata = {
+  title: 'Invoices – Stargate',
+  description: 'Create and manage USDC invoices for your customers.',
+};
+
+export default function InvoicesPage() {
+  return <InvoicesPageClient />;
 }

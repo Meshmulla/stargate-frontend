@@ -3,6 +3,8 @@
 import { AlertCircle, BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ApiErrorBoundary } from '@/components/dashboard/ApiErrorBoundary';
+import { usePathname, useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { CommandPalette } from '@/components/dashboard/CommandPalette';
@@ -25,6 +27,7 @@ const nav = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const session = useSession();
   return (
     <div className="grid min-h-screen grid-cols-[260px_1fr] bg-surface">
@@ -35,11 +38,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Badge status="sandbox" />
         </div>
         <nav className="space-y-1">
-          {nav.map((item) => (
-            <Link key={item.href} href={item.href as any} className="flex h-10 items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-slate-700 transition hover:border-violet hover:bg-violet/10 hover:text-ink">
-              <item.icon size={18} /> {item.label}
-            </Link>
-          ))}
+          {nav.map((item) => {
+            const isActive = item.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(item.href);
+            return (
+              <Link key={item.href} href={item.href as any} className={`flex h-10 items-center gap-3 rounded-md border-l-2 px-3 text-sm transition hover:border-violet hover:bg-violet/10 hover:text-ink ${isActive ? 'border-violet bg-violet/10 font-medium text-ink' : 'border-transparent text-slate-700'}`}>
+                <item.icon size={18} /> {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="mt-auto rounded-md border border-slate-200 bg-slate-50 p-3">
           <div className="flex items-center gap-2 text-sm font-medium text-ink">
@@ -62,7 +68,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <LogOut size={16} /> Logout
           </Button>
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-6"><ApiErrorBoundary>{children}</ApiErrorBoundary></main>
       </div>
     </div>
   );

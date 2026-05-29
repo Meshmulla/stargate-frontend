@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/Button';
 import { CommandPalette } from '@/components/dashboard/CommandPalette';
 import { Input } from '@/components/ui/Input';
 import { useSession } from '@/lib/session';
+import { SessionTimeoutModal } from '@/components/auth/SessionTimeoutModal';
+import { TestModeBanner } from '@/components/dashboard/TestModeBanner';
+import { TestModeToggle } from '@/components/dashboard/TestModeToggle';
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -31,6 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const session = useSession();
   return (
     <div className="grid min-h-screen grid-cols-[260px_1fr] bg-surface">
+      <SessionTimeoutModal />
       <CommandPalette />
       <aside className="flex min-h-screen flex-col border-r border-slate-200 bg-white p-4">
         <div className="mb-6 flex items-center justify-between">
@@ -58,16 +62,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </div>
       </aside>
-      <div className="min-w-0">
+      <div className="min-w-0 flex flex-col">
+        <TestModeBanner />
         <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6">
           <div className="relative w-full max-w-md">
             <Search className="pointer-events-none absolute left-3 top-2.5 text-slate-400" size={16} />
             <Input className="w-full pl-9" placeholder="Search invoices, payments, webhooks" />
           </div>
-          <Button className="h-9 bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => { session.logout(); router.push('/login'); }}>
-            <LogOut size={16} /> Logout
-          </Button>
+          <div className="flex items-center gap-3">
+            <TestModeToggle />
+            <Button className="h-9 bg-white text-ink ring-1 ring-slate-300 hover:bg-slate-50" onClick={() => { session.logout(); router.push('/login'); }}>
+              <LogOut size={16} /> Logout
+            </Button>
+          </div>
         </header>
+        <main className="p-6 flex-1">{children}</main>
         <main className="p-6"><ApiErrorBoundary>{children}</ApiErrorBoundary></main>
       </div>
     </div>
